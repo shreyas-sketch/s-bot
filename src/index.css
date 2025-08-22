@@ -1,0 +1,330 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light Golden Theme Design System */
+
+@layer base {
+  :root {
+    /* Light golden theme colors */
+    --bg-start: #FFF8E7;
+    --bg-mid: #FFE7B3;
+    --bg-end: #FBD37A;
+    --surface: #FFFFFF;
+    --ink: #1F2937;
+    --muted: #6B7280;
+    --accent: #F4C542;
+    --accent-2: #E6B325;
+    --border: rgba(0,0,0,0.08);
+    --shadow: 0 8px 24px rgba(0,0,0,0.08);
+
+    /* Shadcn compatible variables */
+    --background: 48 100% 96%;  /* FFF8E7 */
+    --foreground: 210 22% 22%;  /* 1F2937 */
+
+    --card: 0 0% 100%;          /* FFFFFF */
+    --card-foreground: 210 22% 22%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 22% 22%;
+
+    --primary: 45 90% 61%;      /* F4C542 */
+    --primary-foreground: 210 22% 22%;
+
+    --secondary: 45 78% 53%;    /* E6B325 */
+    --secondary-foreground: 210 22% 22%;
+
+    --muted: 210 14% 43%;       /* 6B7280 */
+    --muted-foreground: 210 14% 43%;
+
+    --accent: 45 90% 61%;       /* F4C542 */
+    --accent-foreground: 210 22% 22%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 210 14% 89%;
+    --input: 0 0% 100%;
+    --ring: 45 90% 61%;
+
+    --radius: 0.75rem;
+
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, var(--accent), var(--accent-2));
+    --gradient-page: linear-gradient(180deg, var(--bg-start), var(--bg-mid));
+    
+    /* Chat bubbles */
+    --chat-user: 0 0% 100%;
+    --chat-assistant: 0 0% 100%;
+    --chat-shadow: var(--shadow);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* New Session Interface colors */
+    --new-session-bg: transparent;
+    --new-session-card: 0 0% 100%;          /* white cards */
+    --new-session-text: 0 0% 0%;            /* black text */
+    --new-session-text-muted: 210 14% 43%;  /* muted gray */
+    --new-session-icon: 45 90% 61%;         /* golden accent */
+    --new-session-icon-bg: 45 90% 61% / 0.1; /* light golden background */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply text-foreground font-poppins;
+    color: var(--ink);
+    min-height: 100vh;
+    width: 100%;
+    background: 
+      radial-gradient(1200px 800px at 80% 10%, var(--bg-end) 0%, transparent 60%),
+      radial-gradient(900px 600px at 20% 30%, var(--bg-mid) 0%, transparent 55%),
+      linear-gradient(180deg, var(--bg-start) 0%, #FFFDF7 40%, var(--bg-mid) 100%);
+    background-attachment: local;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: top;
+  }
+}
+
+@layer components {
+  .chat-bubble-user {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    @apply rounded-2xl px-5 py-3 text-sm md:text-base;
+    box-shadow: var(--shadow);
+    color: var(--ink);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  .chat-bubble-assistant {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--border);
+    @apply rounded-2xl px-6 py-4 text-sm md:text-base;
+    box-shadow: var(--shadow);
+    color: var(--ink);
+    max-width: 800px;
+    margin-left: 0;
+    margin-right: auto;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  .finance-gradient {
+    background: var(--gradient-primary);
+  }
+  
+  .finance-glow {
+    box-shadow: var(--pulse-finance);
+  }
+
+.custom-title {
+  color: black !important;
+}
+  
+  .quick-action-btn {
+    background: linear-gradient(#ffffff, #ffffff) padding-box, 
+                linear-gradient(135deg, #C16821, transparent 50%, transparent 50%, #C16821) border-box;
+    @apply text-black p-4 transition-all duration-300 shadow-sm hover:shadow-md;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    transition: var(--transition-smooth);
+  }
+  
+  .quick-action-btn:hover {
+    background-color: #ffffff !important;
+    @apply shadow-lg;
+    transform: translateY(-1px);
+  }
+  
+  .quick-action-btn .finance-gradient {
+    background: #FADE7B;
+    @apply rounded-xl;
+  }
+  
+  .loading-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Enhanced Markdown Styling - Professional & Mobile Optimized */
+  .markdown-content {
+    @apply leading-relaxed;
+    line-height: 1.7;
+  }
+  
+  .markdown-content h1 {
+    @apply text-lg md:text-2xl font-bold mb-3 md:mb-4 mt-4 md:mt-6;
+    color: #2563eb;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 0.5rem;
+  }
+  
+  .markdown-content h2 {
+    @apply text-base md:text-xl font-semibold mb-2 md:mb-3 mt-4 md:mt-5;
+    color: #2563eb;
+    position: relative;
+  }
+  
+  .markdown-content h2::before {
+    content: "▶";
+    @apply mr-2;
+    color: #2563eb;
+  }
+  
+  .markdown-content h3 {
+    @apply text-sm md:text-lg font-semibold mb-2 mt-3 md:mt-4;
+    color: #2563eb;
+    font-weight: 600;
+  }
+  
+  .markdown-content p {
+    @apply mb-3 md:mb-4 leading-relaxed text-sm md:text-base;
+    color: var(--ink);
+  }
+  
+  .markdown-content ul {
+    @apply space-y-2 md:space-y-3 mb-4 md:mb-6 ml-4;
+  }
+  
+  .markdown-content li {
+    @apply flex items-start space-x-3 text-sm md:text-base leading-relaxed;
+    color: var(--ink);
+  }
+  
+  .markdown-content li::before {
+    content: "●";
+    color: var(--accent);
+    @apply font-bold text-base md:text-lg leading-none mt-1 flex-shrink-0;
+  }
+  
+  .markdown-content ol {
+    @apply space-y-2 md:space-y-3 mb-4 md:mb-6 ml-4;
+  }
+  
+  .markdown-content ol li {
+    @apply list-decimal text-sm md:text-base leading-relaxed;
+    color: var(--ink);
+  }
+  
+  .markdown-content ol li::before {
+    content: none;
+  }
+  
+  .markdown-content strong {
+    @apply font-bold;
+    color: #2563eb;
+  }
+  
+  .markdown-content em {
+    @apply italic;
+    color: var(--muted);
+  }
+  
+  .markdown-content code {
+    background: rgba(244, 197, 66, 0.1);
+    @apply px-2 py-1 rounded text-sm font-mono;
+    color: var(--accent-2);
+  }
+  
+  .markdown-content pre {
+    @apply bg-muted p-4 rounded-lg overflow-x-auto mb-4;
+  }
+  
+  .markdown-content pre code {
+    @apply bg-transparent p-0;
+  }
+  
+  .markdown-content table {
+    @apply w-full border-collapse border border-border rounded-lg overflow-hidden mb-6 shadow-sm;
+  }
+  
+  .markdown-content th {
+    @apply px-4 py-3 text-left font-semibold text-sm md:text-base;
+    background: var(--accent-2);
+    color: white;
+  }
+  
+  .markdown-content td {
+    @apply border-t border-border px-4 py-3 text-sm md:text-base;
+  }
+  
+  .markdown-content tr:nth-child(even) td {
+    background: rgba(244, 197, 66, 0.05);
+  }
+  
+  .markdown-content blockquote {
+    @apply border-l-4 pl-4 ml-2 mb-4 italic;
+    border-color: var(--accent);
+    background: rgba(244, 197, 66, 0.05);
+    color: var(--muted);
+    padding: 1rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+  
+  .markdown-content hr {
+    @apply my-6 border-0 h-px;
+    background: linear-gradient(to right, transparent, var(--accent), transparent);
+  }
+
+  /* Financial Content Color Classes */
+  .text-stock-analysis {
+    color: var(--accent-2);
+    @apply font-semibold;
+  }
+  
+  .text-options-trading {
+    color: hsl(200 85% 55%);
+    @apply font-semibold;
+  }
+  
+  .text-warning {
+    color: hsl(45 95% 50%);
+    @apply font-semibold;
+  }
+  
+  .text-gain {
+    color: hsl(120 85% 45%);
+    @apply font-bold;
+  }
+  
+  .text-loss {
+    color: hsl(0 84% 60%);
+    @apply font-bold;
+  }
+  
+  .text-neutral {
+    @apply font-medium;
+    color: var(--muted);
+  }
+  
+  .bg-highlight {
+    @apply px-3 py-1 rounded-md;
+    background: rgba(244, 197, 66, 0.1);
+  }
+  
+  .bg-warning-highlight {
+    @apply px-3 py-1 rounded-md;
+    background: hsl(45 95% 50% / 0.1);
+  }
+  
+  .bg-gain-highlight {
+    @apply px-3 py-1 rounded-md;
+    background: hsl(120 85% 45% / 0.1);
+  }
+  
+  .bg-loss-highlight {
+    @apply px-3 py-1 rounded-md;
+    background: hsl(0 84% 60% / 0.1);
+  }
+}
