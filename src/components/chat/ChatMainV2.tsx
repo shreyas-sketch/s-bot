@@ -11,9 +11,10 @@ const DEBUG_CHAT = typeof window !== 'undefined' && (window as any).DEBUG_CHAT; 
 
 interface ChatMainV2Props {
   onQuickAction?: (query: string) => void;
+  sidebarCollapsed?: boolean;
 }
 
-export const ChatMainV2: React.FC<ChatMainV2Props> = ({ onQuickAction }) => {
+export const ChatMainV2: React.FC<ChatMainV2Props> = ({ onQuickAction, sidebarCollapsed = false }) => {
   const { user } = useAuth();
   const { currentChat, createNewChat, addMessage, updateChatTitle } = useChat();
   const { toast } = useToast();
@@ -213,6 +214,7 @@ export const ChatMainV2: React.FC<ChatMainV2Props> = ({ onQuickAction }) => {
           handleKeyPress={handleKeyPress}
           handleFileSelect={handleFileSelect}
           isLoading={isLoading}
+          sidebarCollapsed={sidebarCollapsed}
         />
       </div>
     );
@@ -247,6 +249,7 @@ export const ChatMainV2: React.FC<ChatMainV2Props> = ({ onQuickAction }) => {
             handleKeyPress={handleKeyPress}
             handleFileSelect={handleFileSelect}
             isLoading={isLoading}
+            sidebarCollapsed={sidebarCollapsed}
           />
         </div>
       </div>

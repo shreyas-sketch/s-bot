@@ -23,6 +23,7 @@ interface NewSessionInterfaceProps {
   handleKeyPress?: (e: React.KeyboardEvent) => void;
   handleFileSelect?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isLoading?: boolean;
+  sidebarCollapsed?: boolean;
 }
 
 const quickActions: QuickAction[] = [
@@ -67,7 +68,8 @@ export const NewSessionInterface: React.FC<NewSessionInterfaceProps> = ({
   handleSendMessage: externalHandleSendMessage,
   handleKeyPress: externalHandleKeyPress,
   handleFileSelect: externalHandleFileSelect,
-  isLoading = false
+  isLoading = false,
+  sidebarCollapsed = false
 }) => {
   const [internalInputMessage, setInternalInputMessage] = useState('');
   const [internalSelectedFiles, setInternalSelectedFiles] = useState<File[]>([]);
@@ -122,7 +124,7 @@ export const NewSessionInterface: React.FC<NewSessionInterfaceProps> = ({
         <>
           {/* Main content area */}
           <div className="flex-1 flex items-center justify-center p-8">
-            <div className="max-w-4xl w-full text-center space-y-8">
+            <div className={`${sidebarCollapsed ? 'max-w-6xl' : 'max-w-4xl'} w-full text-center space-y-8`}>
               {/* Header Section */}
               <div className="space-y-4">
                 <img 
@@ -140,12 +142,12 @@ export const NewSessionInterface: React.FC<NewSessionInterfaceProps> = ({
               </div>
 
               {/* Quick Actions Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+              <div className={`grid grid-cols-1 ${sidebarCollapsed ? 'md:grid-cols-3 lg:grid-cols-4 max-w-6xl gap-6' : 'md:grid-cols-2 max-w-3xl gap-4'} mx-auto`}>
                 {quickActions.map((action) => (
                   <Button
                     key={action.id}
                     variant="outline"
-                    className="h-auto p-4 text-left border-2 transition-all duration-200 hover:shadow-lg flex items-start gap-4 min-h-[100px]"
+                    className={`h-auto text-left border-2 transition-all duration-200 hover:shadow-lg flex items-start gap-4 ${sidebarCollapsed ? 'p-6 min-h-[140px]' : 'p-4 min-h-[100px]'}`}
                     style={{ 
                       backgroundColor: 'hsl(var(--new-session-card))',
                       borderColor: '#E5E7EB',
@@ -154,19 +156,21 @@ export const NewSessionInterface: React.FC<NewSessionInterfaceProps> = ({
                     onClick={() => handleQuickActionClick(action.query)}
                   >
                     <div 
-                      className="flex-shrink-0 p-3 rounded-xl flex items-center justify-center"
+                      className={`flex-shrink-0 rounded-xl flex items-center justify-center ${sidebarCollapsed ? 'p-4' : 'p-3'}`}
                       style={{ 
                         backgroundColor: 'hsl(var(--new-session-icon-bg))',
                         color: 'hsl(var(--new-session-icon))'
                       }}
                     >
-                      {action.icon}
+                      <div className={sidebarCollapsed ? 'w-7 h-7' : 'w-6 h-6'}>
+                        {action.icon}
+                      </div>
                     </div>
                     <div className="flex-1 text-left space-y-2 overflow-hidden">
-                      <h3 className="font-semibold text-sm leading-tight text-wrap" style={{ color: 'hsl(var(--new-session-text))' }}>
+                      <h3 className={`font-semibold leading-tight text-wrap ${sidebarCollapsed ? 'text-base' : 'text-sm'}`} style={{ color: 'hsl(var(--new-session-text))' }}>
                         {action.title}
                       </h3>
-                      <p className="text-xs leading-relaxed text-wrap" style={{ color: 'hsl(var(--new-session-text-muted))' }}>
+                      <p className={`leading-relaxed text-wrap ${sidebarCollapsed ? 'text-sm' : 'text-xs'}`} style={{ color: 'hsl(var(--new-session-text-muted))' }}>
                         {action.description}
                       </p>
                     </div>
@@ -187,7 +191,7 @@ export const NewSessionInterface: React.FC<NewSessionInterfaceProps> = ({
 
       {/* Chat Input Section - Always at bottom */}
       <div className={`${showQuickActions ? 'p-8 pt-0' : 'p-4'}`}>
-        <div className={`${showQuickActions ? 'max-w-4xl mx-auto' : 'w-full'}`}>
+        <div className={`${showQuickActions ? (sidebarCollapsed ? 'max-w-6xl' : 'max-w-4xl') + ' mx-auto' : 'w-full'}`}>
           <div className="relative flex items-center gap-2 p-3 rounded-full shadow-lg" style={{ backgroundColor: 'hsl(var(--new-session-card))' }}>
             <Button
               variant="ghost"

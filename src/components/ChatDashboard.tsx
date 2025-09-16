@@ -31,6 +31,7 @@ export const ChatDashboard = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const generateSessionId = () => {
     return Math.floor(1000000000 + Math.random() * 9000000000);
@@ -258,7 +259,7 @@ export const ChatDashboard = () => {
 
   return (
     <div className="min-h-screen w-full text-[color:var(--ink)]">
-      <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-[280px_1fr] min-h-screen">
+      <div className={`mx-auto max-w-[1400px] grid grid-cols-1 ${isSidebarCollapsed ? 'md:grid-cols-[80px_1fr]' : 'md:grid-cols-[280px_1fr]'} min-h-screen`}>
         {/* Sidebar - Fixed on desktop */}
         <aside className="hidden md:block sticky top-0 h-screen flex flex-col bg-[color:var(--surface)]/90 backdrop-blur-sm border-r border-[color:var(--border)]">
           <ChatSidebar
@@ -269,6 +270,8 @@ export const ChatDashboard = () => {
             onSessionRename={handleSessionRename}
             onSessionDelete={handleSessionDelete}
             isLoading={isLoading}
+            isCollapsed={isSidebarCollapsed}
+            onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
           />
         </aside>
         
@@ -305,6 +308,8 @@ export const ChatDashboard = () => {
                 onSessionRename={handleSessionRename}
                 onSessionDelete={handleSessionDelete}
                 isLoading={isLoading}
+                isCollapsed={false}
+                onToggleCollapse={() => {}}
               />
             </div>
           </>

@@ -23,6 +23,8 @@ interface ChatSidebarProps {
   onSessionRename: (sessionId: number, newTitle: string) => void;
   onSessionDelete: (sessionId: number) => void;
   isLoading: boolean;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
 }
 
 export const ChatSidebar: React.FC<ChatSidebarProps> = ({
@@ -32,10 +34,11 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   onNewSession,
   onSessionRename,
   onSessionDelete,
-  isLoading
+  isLoading,
+  isCollapsed,
+  onToggleCollapse
 }) => {
   const { signOut, user } = useAuth();
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
   const [renameSessionId, setRenameSessionId] = useState<number | null>(null);
   const [renameValue, setRenameValue] = useState('');
@@ -111,51 +114,56 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
               />
             </div>
           )}
-          <Button 
-            onClick={onNewSession}
-            className={`${isCollapsed ? 'w-8 h-8 p-0 bg-[color:var(--accent-2)] hover:bg-[color:var(--accent-2)] justify-center items-center' : 'w-full bg-[color:var(--accent)] hover:bg-[color:var(--accent-2)]'} text-black rounded-md`}
-            disabled={isLoading}
-            title={isCollapsed ? "New Chat" : ""}
-          >
-            <Plus className="w-4 h-4 text-black" />
-            {!isCollapsed && <span className="ml-2 text-black">New Chat</span>}
-          </Button>
+          <div className={`${isCollapsed ? 'flex justify-center' : ''}`}>
+            <Button 
+              onClick={onNewSession}
+              className={`${isCollapsed ? 'w-12 h-12 p-0 bg-[color:var(--accent-2)] hover:bg-[color:var(--accent-2)] justify-center items-center' : 'w-full bg-[color:var(--accent)] hover:bg-[color:var(--accent-2)]'} text-black rounded-md`}
+              disabled={isLoading}
+              title={isCollapsed ? "New Chat" : ""}
+            >
+              <Plus className={`${isCollapsed ? 'w-6 h-6' : 'w-4 h-4'} text-black`} />
+              {!isCollapsed && <span className="ml-2 text-black">New Chat</span>}
+            </Button>
+          </div>
           
           {/* Collapse Toggle Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden lg:block absolute -right-3 top-4 z-10 bg-white border border-[color:var(--border)] rounded-full w-6 h-6 p-0 hover:bg-[#FFF7E6]"
-          >
-            {isCollapsed ? <ChevronRight className="w-3 h-3 !text-black" /> : <ChevronLeft className="w-3 h-3 !text-black" />}
-          </Button>
+          <div className={`${isCollapsed ? 'flex justify-center' : ''}`}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggleCollapse}
+              className="hidden lg:block absolute -right-3 top-4 z-10 bg-white border border-[color:var(--border)] rounded-full w-6 h-6 p-0 hover:bg-[#FFF7E6]"
+            >
+              {isCollapsed ? <ChevronRight className="w-3 h-3 !text-black" /> : <ChevronLeft className="w-3 h-3 !text-black" />}
+            </Button>
+          </div>
         </header>
 
         {/* Sessions List - Scrollable */}
-        <nav className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin scrollbar-thumb-slate-300/40 scrollbar-track-transparent">
+        <nav className={`flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin scrollbar-thumb-slate-300/40 scrollbar-track-transparent ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
           {sessions.map((session) => (
-            <div key={session.id} className="relative group">
+            <div key={session.id} className={`relative group ${isCollapsed ? 'flex justify-center' : ''}`}>
                 <Button
                 variant="ghost"
-                className={`w-full justify-start text-left h-auto p-3 bg-white hover:bg-[#FFF7E6] border border-[color:var(--border)] rounded-xl shadow-[var(--shadow)] text-black ${
+                className={`${isCollapsed ? 'w-12 h-12 justify-center p-2' : 'w-full justify-start text-left h-auto p-3'} bg-white hover:bg-[#FFF7E6] border border-[color:var(--border)] rounded-xl shadow-[var(--shadow)] text-black ${
                   currentSessionId === session.id ? 'bg-[#FFF7E6] border-l-2 border-[color:var(--accent-2)]' : ''
-                } ${isCollapsed ? 'justify-center p-2' : ''}`}
+                }`}
                 onClick={() => onSessionSelect(session.id)}
+                title={isCollapsed ? session.title : ""}
               >
-                <div className="flex items-start gap-2 w-full">
-                  {!isCollapsed && <MessageCircle className="w-4 h-4 mt-0.5 text-black flex-shrink-0" />}
-                  <div className="flex-1 min-w-0">
-                    <div className="truncate text-sm font-medium text-black">
-                      {isCollapsed ? getFirstThreeWords(session.title) : session.title}
-                    </div>
-                    {!isCollapsed && (
+                {isCollapsed ? (
+                  <MessageCircle className="w-6 h-6 text-black" />
+                ) : (
+                  <div className="flex items-start gap-2 w-full">
+                    <MessageCircle className="w-4 h-4 mt-0.5 text-black flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="truncate text-sm font-medium text-black">
+                        {session.title}
+                      </div>
                       <div className="text-xs text-[color:var(--muted)] mt-1">
                         {formatDate(session.updated_at)}
                       </div>
-                    )}
-                  </div>
-                  {!isCollapsed && (
+                    </div>
                     <button
                       className="ml-auto text-black hover:text-red-500"
                       title="Delete session"
@@ -163,8 +171,8 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
-                  )}
-                </div>
+                  </div>
+                )}
               </Button>
 
               {!isCollapsed && (
@@ -201,21 +209,23 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
         </nav>
 
         {/* Footer - Pinned at bottom */}
-        <footer className="sticky bottom-0 p-3 border-t border-[color:var(--border)] bg-white">
+        <footer className={`sticky bottom-0 p-3 border-t border-[color:var(--border)] bg-white ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
           {!isCollapsed && (
             <div className="text-xs text-black mb-2 truncate">
               {user?.email}
             </div>
           )}
-          <Button 
-            variant="ghost" 
-            className={`${isCollapsed ? 'w-8 h-8 p-0' : 'w-full justify-start'} text-black hover:bg-[#FFF7E6]`}
-            onClick={signOut}
-            title={isCollapsed ? "Sign Out" : ""}
-          >
-            <LogOut className="w-4 h-4 text-black" />
-            {!isCollapsed && <span className="ml-2 text-black">Sign Out</span>}
-          </Button>
+          <div className={`${isCollapsed ? 'flex justify-center' : ''}`}>
+            <Button 
+              variant="ghost" 
+              className={`${isCollapsed ? 'w-12 h-12 p-0 justify-center' : 'w-full justify-start'} text-black hover:bg-[#FFF7E6]`}
+              onClick={signOut}
+              title={isCollapsed ? "Sign Out" : ""}
+            >
+              <LogOut className={`${isCollapsed ? 'w-6 h-6' : 'w-4 h-4'} text-black`} />
+              {!isCollapsed && <span className="ml-2 text-black">Sign Out</span>}
+            </Button>
+          </div>
         </footer>
       </div>
 

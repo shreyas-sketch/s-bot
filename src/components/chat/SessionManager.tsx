@@ -35,6 +35,7 @@ export const SessionManager: React.FC<SessionManagerProps> = ({ children }) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const allChats = getAllChats();
 
@@ -90,7 +91,7 @@ export const SessionManager: React.FC<SessionManagerProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen w-full bg-finance-fixed bg-fixed text-slate-100">
-      <div className="mx-auto  grid grid-cols-1 md:grid-cols-[298px_1fr] md:gap-6 min-h-screen">
+      <div className={`mx-auto grid grid-cols-1 ${isSidebarCollapsed ? 'md:grid-cols-[80px_1fr]' : 'md:grid-cols-[298px_1fr]'} md:gap-6 min-h-screen`}>
         {/* Sidebar - Fixed on desktop */}
         <aside className="hidden md:block sticky top-0 h-screen flex flex-col bg-white/5 backdrop-blur-sm border-r border-white/10">
           <ChatSidebar
@@ -101,6 +102,8 @@ export const SessionManager: React.FC<SessionManagerProps> = ({ children }) => {
             onSessionRename={(id, title) => updateChatTitle(id.toString(), title)}
             onSessionDelete={(id) => handleSessionDelete(id.toString())}
             isLoading={isLoading}
+            isCollapsed={isSidebarCollapsed}
+            onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
           />
         </aside>
         
@@ -138,6 +141,8 @@ export const SessionManager: React.FC<SessionManagerProps> = ({ children }) => {
                   onSessionRename={(id, title) => updateChatTitle(id.toString(), title)}
                   onSessionDelete={(id) => handleSessionDelete(id.toString())}
                   isLoading={isLoading}
+                  isCollapsed={false}
+                  onToggleCollapse={() => {}}
                 />
               </div>
             </div>
@@ -146,7 +151,7 @@ export const SessionManager: React.FC<SessionManagerProps> = ({ children }) => {
         
         {/* Chat column */}
         <main className="flex flex-col min-h-screen">
-          {/* Mobile menu button */}
+          {/* Mobile menu button only */}
           <div className="md:hidden p-4">
             <Button 
               variant="ghost" 
@@ -158,8 +163,11 @@ export const SessionManager: React.FC<SessionManagerProps> = ({ children }) => {
             </Button>
           </div>
           
+          
           <div className="flex-1">
-            {children}
+            {typeof children === 'object' && children && 'type' in children 
+              ? React.cloneElement(children as React.ReactElement<any>, { sidebarCollapsed: isSidebarCollapsed })
+              : children}
           </div>
         </main>
       </div>
